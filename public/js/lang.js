@@ -33,7 +33,7 @@
             cafeDefaultDesc: 'Cafe menümüzden lezzetli bir ürün.',
             googleReview: '⭐ Bizi Google\'da Değerlendirin',
             whatsapp: '💬 WhatsApp',
-            langBtnLabel: '🇬🇧 EN',
+            langBtnLabel: '<span class="fi fi-gb"></span> EN',
             langBtnTitle: 'Switch to English',
         },
         en: {
@@ -48,7 +48,7 @@
             cafeDefaultDesc: 'A delicious item from our cafe menu.',
             googleReview: '⭐ Review Us on Google',
             whatsapp: '💬 WhatsApp',
-            langBtnLabel: '🇹🇷 TR',
+            langBtnLabel: '<span class="fi fi-tr"></span> TR',
             langBtnTitle: 'Türkçeye Geç',
         }
     };
@@ -144,7 +144,7 @@
 
             const langBtn = document.getElementById('langToggleBtn');
             if (langBtn) {
-                langBtn.textContent = this.t('langBtnLabel');
+                langBtn.innerHTML = this.t('langBtnLabel');
                 langBtn.title = this.t('langBtnTitle');
             }
         },

@@ -7,6 +7,7 @@
     <title>Cafe Menüsü - The Nava Hotel</title>
     <link rel="icon" type="image/x-icon" id="favicon" href="">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
     <script src="/js/lang.js"></script>
 </head>
 <body>
@@ -63,7 +64,7 @@
     <script>
         const _ltb = document.getElementById('langToggleBtn');
         if (_ltb) {
-            _ltb.textContent = Lang.isEN() ? '🇹🇷 TR' : '🇬🇧 EN';
+            _ltb.innerHTML = Lang.isEN() ? '<span class="fi fi-tr"></span> TR' : '<span class="fi fi-gb"></span> EN';
             _ltb.addEventListener('click', () => Lang.toggle());
         }
     </script>

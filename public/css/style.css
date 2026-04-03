@@ -656,6 +656,23 @@ body {
     font-size: 0.95rem;
 }
 
+/* flag-icons sizes */
+.fi-pill {
+    width: 1.2em;
+    height: 0.9em;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 2px;
+}
+
+.lang-toggle-btn .fi {
+    width: 1.1em;
+    height: 0.85em;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 2px;
+}
+
 /* Language pill toggle */
 .lang-pill-wrapper {
     display: flex;
