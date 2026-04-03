@@ -161,7 +161,7 @@
             const btn = document.createElement('button');
             btn.id = 'langToggleBtn';
             btn.className = 'lang-toggle-btn';
-            btn.textContent = this.t('langBtnLabel');
+            btn.innerHTML = this.t('langBtnLabel');
             btn.title = this.t('langBtnTitle');
             btn.addEventListener('click', () => this.toggle());
             parentEl.appendChild(btn);
