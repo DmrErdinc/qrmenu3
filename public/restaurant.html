@@ -17,10 +17,12 @@
                 <h1>THE NAVA HOTEL</h1>
                 <p class="tagline">Restaurant Menüsü</p>
             </div>
-            <a href="#" id="headerReviewLink" class="header-review-btn" target="_blank" rel="noopener" style="display: none;">
-                ⭐ <span class="review-text">Değerlendir</span>
-            </a>
-            <button id="langToggleBtn" class="lang-toggle-btn" title="Change Language">🇬🇧 EN</button>
+            <div class="header-right">
+                <a href="#" id="headerReviewLink" class="header-review-btn" target="_blank" rel="noopener" style="display: none;">
+                    ⭐ <span class="review-text">Değerlendir</span>
+                </a>
+                <button id="langToggleBtn" class="lang-toggle-btn" title="Change Language">🇬🇧 EN</button>
+            </div>
         </header>
 
         <div class="search-section">
@@ -59,7 +61,11 @@
 
     <script src="/js/restaurant.js"></script>
     <script>
-        document.getElementById('langToggleBtn').addEventListener('click', () => Lang.toggle());
+        const _ltb = document.getElementById('langToggleBtn');
+        if (_ltb) {
+            _ltb.textContent = Lang.isEN() ? '🇹🇷 TR' : '🇬🇧 EN';
+            _ltb.addEventListener('click', () => Lang.toggle());
+        }
     </script>
     <script>
         // Load settings

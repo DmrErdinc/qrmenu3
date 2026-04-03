@@ -84,6 +84,14 @@ body {
     letter-spacing: 1px;
 }
 
+/* Header right group (review btn + lang toggle) */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
 .back-button {
     background: rgba(255, 255, 255, 0.1);
     color: white;
@@ -978,8 +986,17 @@ body {
     }
 
     .header-review-btn {
-        padding: 6px 12px;
+        padding: 6px 10px;
         font-size: 0.8rem;
+    }
+
+    .header-right {
+        gap: 6px;
+    }
+
+    .header .lang-toggle-btn {
+        padding: 5px 10px;
+        font-size: 0.78rem;
     }
 
     .welcome-section h2 {
@@ -1071,12 +1088,18 @@ body {
     .header-review-btn span.review-text {
         display: none;
     }
+
+    .header .lang-toggle-btn {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
 }
 
 @media (max-width: 380px) {
     .header {
-        flex-direction: column;
-        align-items: center;
+        flex-wrap: nowrap;
+        padding: 12px 12px;
+        gap: 8px;
     }
 
     .logo {
