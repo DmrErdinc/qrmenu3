@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -6,6 +7,7 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 // Middleware
@@ -14,24 +16,28 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Session configuration (must be before static files)
 app.use(session({
-  secret: 'nava-hotel-secret-key-2024-very-long-secret-for-security',
+  secret: process.env.SESSION_SECRET || 'nava-hotel-secret-key-2024-very-long-secret-for-security',
   resave: true,
   saveUninitialized: true,
   cookie: {
     secure: false,
-    httpOnly: false,
+    httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
-    sameSite: 'strict'
+    sameSite: 'lax'
   },
   name: 'nava.sid'
 }));
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+  res.redirect('/index.html');
+});
 
 // Multer configuration for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = './public/uploads';
+    const uploadDir = path.join(__dirname, 'public', 'uploads');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -65,7 +71,7 @@ const readData = (filename) => {
     const dataPath = path.join(__dirname, 'data', filename);
     if (!fs.existsSync(dataPath)) {
       if (filename === 'menu.json') return { categories: [], products: [] };
-      if (filename === 'settings.json') return { logo: '', favicon: '', googleReviewUrl: '', hotelName: 'The Nava Hotel' };
+      if (filename === 'settings.json') return { logo: '', favicon: '', googleReviewUrl: '', hotelName: 'The Nava Hotel', copyrightText: '', whatsappNumber: '' };
       return { admins: [] };
     }
     const data = fs.readFileSync(dataPath, 'utf8');
@@ -73,7 +79,7 @@ const readData = (filename) => {
   } catch (error) {
     console.error(`Error reading ${filename}:`, error);
     if (filename === 'menu.json') return { categories: [], products: [] };
-    if (filename === 'settings.json') return { logo: '', favicon: '', googleReviewUrl: '', hotelName: 'The Nava Hotel' };
+    if (filename === 'settings.json') return { logo: '', favicon: '', googleReviewUrl: '', hotelName: 'The Nava Hotel', copyrightText: '', whatsappNumber: '' };
     return { admins: [] };
   }
 };
@@ -400,7 +406,7 @@ app.get('/api/admin/settings', isAuthenticated, (req, res) => {
 
 // Update settings
 app.put('/api/admin/settings', isAuthenticated, (req, res) => {
-  const { logo, favicon, googleReviewUrl, hotelName } = req.body;
+  const { logo, favicon, googleReviewUrl, hotelName, copyrightText, whatsappNumber } = req.body;
   
   const settings = readData('settings.json');
   const updatedSettings = {
@@ -408,6 +414,8 @@ app.put('/api/admin/settings', isAuthenticated, (req, res) => {
     favicon: favicon !== undefined ? favicon : settings.favicon,
     googleReviewUrl: googleReviewUrl !== undefined ? googleReviewUrl : settings.googleReviewUrl,
     hotelName: hotelName !== undefined ? hotelName : settings.hotelName,
+    copyrightText: copyrightText !== undefined ? copyrightText : (settings.copyrightText || ''),
+    whatsappNumber: whatsappNumber !== undefined ? whatsappNumber : (settings.whatsappNumber || ''),
     updatedAt: new Date().toISOString()
   };
   
@@ -416,6 +424,39 @@ app.put('/api/admin/settings', isAuthenticated, (req, res) => {
   }
   
   return res.status(500).json({ success: false, message: 'Failed to update settings' });
+});
+
+// Change admin password
+app.put('/api/admin/password', isAuthenticated, (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ success: false, message: 'Mevcut ve yeni şifre gerekli' });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ success: false, message: 'Yeni şifre en az 6 karakter olmalı' });
+  }
+
+  const adminsData = readData('admins.json');
+  const adminIndex = adminsData.admins.findIndex(a => a.id === req.session.adminId);
+
+  if (adminIndex === -1) {
+    return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı' });
+  }
+
+  if (adminsData.admins[adminIndex].password !== currentPassword) {
+    return res.status(401).json({ success: false, message: 'Mevcut şifre yanlış' });
+  }
+
+  adminsData.admins[adminIndex].password = newPassword;
+  adminsData.admins[adminIndex].updatedAt = new Date().toISOString();
+
+  if (writeData('admins.json', adminsData)) {
+    return res.json({ success: true, message: 'Şifre başarıyla güncellendi' });
+  }
+
+  return res.status(500).json({ success: false, message: 'Şifre güncellenemedi' });
 });
 
 // ============= ERROR HANDLING =============
@@ -427,7 +468,7 @@ app.use((err, req, res, next) => {
 
 // ============= START SERVER =============
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n🚀 The Nava Hotel QR Menu Server is running!`);
   console.log(`📍 Local: http://localhost:${PORT}`);
   console.log(`📱 Public Menu: http://localhost:${PORT}/index.html`);

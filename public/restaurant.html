@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The Nava Hotel Restaurant Menüsü - Özel Yemek Deneyimi">
+    <title>Restaurant Menüsü - The Nava Hotel</title>
+    <link rel="icon" type="image/x-icon" id="favicon" href="">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container menu-page">
+        <header class="header">
+            <a href="/index.html" class="back-button">← Geri</a>
+            <div class="logo" id="headerLogo">
+                <h1>THE NAVA HOTEL</h1>
+                <p class="tagline">Restaurant Menüsü</p>
+            </div>
+            <a href="#" id="headerReviewLink" class="header-review-btn" target="_blank" rel="noopener" style="display: none;">
+                ⭐ <span class="review-text">Değerlendir</span>
+            </a>
+        </header>
+
+        <div class="search-section">
+            <input type="text" id="searchInput" class="search-input" placeholder="Menüde ara...">
+        </div>
+
+        <div class="categories-filter" id="categoriesFilter">
+            <button class="category-btn active" data-category="all">Tümü</button>
+        </div>
+
+        <main class="menu-content" id="menuContent">
+            <div class="loading">Menü yükleniyor...</div>
+        </main>
+
+        <footer class="footer">
+            <p id="copyrightText">&copy; 2024 <span id="hotelName">The Nava Hotel</span>. Tüm hakları saklıdır.</p>
+            <a href="#" id="googleReviewLink" class="review-link" target="_blank" rel="noopener" style="display: none;">
+                ⭐ Bizi Google'da Değerlendirin
+            </a>
+            <a href="#" id="whatsappLink" class="review-link" target="_blank" rel="noopener" style="display: none; background: #25D366;">
+                💬 WhatsApp
+            </a>
+        </footer>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" class="scroll-to-top" title="Yukarı Çık"></button>
+
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="/js/restaurant.js"></script>
+    <script>
+        // Load settings
+        async function loadSettings() {
+            try {
+                const response = await fetch('/api/settings');
+                const settings = await response.json();
+                
+                if (settings.favicon) {
+                    document.getElementById('favicon').href = settings.favicon;
+                }
+                
+                if (settings.logo) {
+                    const logoDiv = document.getElementById('headerLogo');
+                    logoDiv.innerHTML = `<img src="${settings.logo}" alt="${settings.hotelName}" style="max-width: 200px; max-height: 60px;"><p class="tagline">Restaurant Menüsü</p>`;
+                }
+                
+                if (settings.hotelName) {
+                    document.getElementById('hotelName').textContent = settings.hotelName;
+                    document.title = 'Restaurant Menüsü - ' + settings.hotelName;
+                }
+                
+                if (settings.copyrightText) {
+                    document.getElementById('copyrightText').textContent = settings.copyrightText;
+                }
+
+                if (settings.googleReviewUrl) {
+                    const reviewLink = document.getElementById('googleReviewLink');
+                    reviewLink.href = settings.googleReviewUrl;
+                    reviewLink.style.display = 'inline-block';
+                    
+                    const headerReviewLink = document.getElementById('headerReviewLink');
+                    headerReviewLink.href = settings.googleReviewUrl;
+                    headerReviewLink.style.display = 'inline-flex';
+                }
+
+                if (settings.whatsappNumber) {
+                    const waLink = document.getElementById('whatsappLink');
+                    waLink.href = 'https://wa.me/' + settings.whatsappNumber;
+                    waLink.style.display = 'inline-block';
+                }
+            } catch (error) {
+                console.error('Ayarlar yüklenemedi:', error);
+            }
+        }
+        
+        // Scroll to top functionality
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+        
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        document.addEventListener('DOMContentLoaded', loadSettings);
+    </script>
+</body>
+</html>

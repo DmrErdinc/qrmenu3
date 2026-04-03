@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The Nava Hotel - Dijital Menü - Cafe & Restaurant">
+    <meta name="keywords" content="otel, restoran, cafe, menü, dijital menü, QR menü">
+    <title>The Nava Hotel - Dijital Menü</title>
+    <link rel="icon" type="image/x-icon" id="favicon" href="">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo" id="headerLogo">
+                <h1>THE NAVA HOTEL</h1>
+                <p class="tagline">Premium Yemek Deneyimi</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="welcome-section">
+                <h2>Dijital Menümüze Hoş Geldiniz</h2>
+                <p>Yemek deneyiminizi seçin</p>
+            </div>
+
+            <div class="menu-selection">
+                <a href="/cafe.html" class="menu-card cafe-card">
+                    <div class="card-icon">☕</div>
+                    <h3>Cafe Menüsü</h3>
+                    <p>Kahve, İçecekler & Atıştırmalıklar</p>
+                    <span class="card-arrow">→</span>
+                </a>
+
+                <a href="/restaurant.html" class="menu-card restaurant-card">
+                    <div class="card-icon">🍽️</div>
+                    <h3>Restaurant Menüsü</h3>
+                    <p>Tam Yemek Deneyimi</p>
+                    <span class="card-arrow">→</span>
+                </a>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p id="copyrightText">&copy; 2024 <span id="hotelName">The Nava Hotel</span>. Tüm hakları saklıdır.</p>
+            <a href="#" id="googleReviewLink" class="review-link" target="_blank" rel="noopener" style="display: none;">
+                ⭐ Bizi Google'da Değerlendirin
+            </a>
+            <a href="#" id="whatsappLink" class="review-link" target="_blank" rel="noopener" style="display: none; background: #25D366;">
+                💬 WhatsApp
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        // Load settings
+        async function loadSettings() {
+            try {
+                const response = await fetch('/api/settings');
+                const settings = await response.json();
+                
+                // Update favicon
+                if (settings.favicon) {
+                    document.getElementById('favicon').href = settings.favicon;
+                }
+                
+                // Update logo
+                if (settings.logo) {
+                    const logoDiv = document.getElementById('headerLogo');
+                    logoDiv.innerHTML = `<img src="${settings.logo}" alt="${settings.hotelName}" style="max-width: 200px; max-height: 80px;">`;
+                }
+                
+                // Update hotel name
+                if (settings.hotelName) {
+                    document.getElementById('hotelName').textContent = settings.hotelName;
+                    document.title = settings.hotelName + ' - Dijital Menü';
+                }
+
+                // Update copyright text
+                if (settings.copyrightText) {
+                    document.getElementById('copyrightText').textContent = settings.copyrightText;
+                }
+                
+                // Update Google review link
+                if (settings.googleReviewUrl) {
+                    const reviewLink = document.getElementById('googleReviewLink');
+                    reviewLink.href = settings.googleReviewUrl;
+                    reviewLink.style.display = 'inline-block';
+                }
+
+                // Update WhatsApp link
+                if (settings.whatsappNumber) {
+                    const waLink = document.getElementById('whatsappLink');
+                    waLink.href = 'https://wa.me/' + settings.whatsappNumber;
+                    waLink.style.display = 'inline-block';
+                }
+            } catch (error) {
+                console.error('Ayarlar yüklenemedi:', error);
+            }
+        }
+        
+        // Load settings on page load
+        document.addEventListener('DOMContentLoaded', loadSettings);
+    </script>
+</body>
+</html>

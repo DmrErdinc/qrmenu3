@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetim Paneli - The Nava Hotel</title>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div class="admin-container">
+        <nav class="admin-nav" id="adminNav">
+            <div class="nav-header">
+                <div>
+                    <h2>THE NAVA HOTEL</h2>
+                    <p>Yönetim Paneli</p>
+                </div>
+                <button class="sidebar-close-btn" onclick="toggleSidebar()" title="Menüyü Kapat">✕</button>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="nav-link active" data-section="dashboard">📊 Kontrol Paneli</a></li>
+                <li><a href="#cafe-menu" class="nav-link" data-section="cafe">☕ Cafe Menüsü</a></li>
+                <li><a href="#restaurant-menu" class="nav-link" data-section="restaurant">🍽️ Restaurant Menüsü</a></li>
+                <li><a href="#categories" class="nav-link" data-section="categories">📁 Kategoriler</a></li>
+                <li><a href="#settings" class="nav-link" data-section="settings">⚙️ Ayarlar</a></li>
+            </ul>
+            <button id="logoutBtn" class="logout-btn">Çıkış Yap</button>
+        </nav>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="Menüyü Aç/Kapat">
+                    <span></span><span></span><span></span>
+                </button>
+                <h1 id="sectionTitle">Kontrol Paneli</h1>
+                <div class="user-info">
+                    <span id="username">Admin</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="admin-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-info">
+                            <h3 id="totalProducts">0</h3>
+                            <p>Toplam Ürün</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <h3 id="activeProducts">0</h3>
+                            <p>Aktif Ürün</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">❌</div>
+                        <div class="stat-info">
+                            <h3 id="inactiveProducts">0</h3>
+                            <p>Pasif Ürün</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📁</div>
+                        <div class="stat-info">
+                            <h3 id="totalCategories">0</h3>
+                            <p>Kategori</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">☕</div>
+                        <div class="stat-info">
+                            <h3 id="cafeProducts">0</h3>
+                            <p>Cafe Ürünü</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🍽️</div>
+                        <div class="stat-info">
+                            <h3 id="restaurantProducts">0</h3>
+                            <p>Restaurant Ürünü</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cafe Menu Section -->
+            <section id="cafe-section" class="admin-section">
+                <div class="section-header">
+                    <h2>Cafe Menü Yönetimi</h2>
+                    <button class="btn btn-primary" onclick="openProductModal('cafe')">+ Ürün Ekle</button>
+                </div>
+                <div class="search-filter">
+                    <input type="text" id="cafeSearch" class="search-input" placeholder="Ürün ara...">
+                    <select id="cafeFilter" class="filter-select">
+                        <option value="all">Tüm Ürünler</option>
+                        <option value="active">Sadece Aktif</option>
+                        <option value="inactive">Sadece Pasif</option>
+                    </select>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Görsel</th>
+                                <th>Ürün Adı</th>
+                                <th>Kategori</th>
+                                <th>Fiyat</th>
+                                <th>Etiket</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cafeTableBody">
+                            <tr><td colspan="7">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Restaurant Menu Section -->
+            <section id="restaurant-section" class="admin-section">
+                <div class="section-header">
+                    <h2>Restaurant Menü Yönetimi</h2>
+                    <button class="btn btn-primary" onclick="openProductModal('restaurant')">+ Ürün Ekle</button>
+                </div>
+                <div class="search-filter">
+                    <input type="text" id="restaurantSearch" class="search-input" placeholder="Ürün ara...">
+                    <select id="restaurantFilter" class="filter-select">
+                        <option value="all">Tüm Ürünler</option>
+                        <option value="active">Sadece Aktif</option>
+                        <option value="inactive">Sadece Pasif</option>
+                    </select>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Görsel</th>
+                                <th>Ürün Adı</th>
+                                <th>Kategori</th>
+                                <th>Fiyat</th>
+                                <th>Etiket</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="restaurantTableBody">
+                            <tr><td colspan="7">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section id="categories-section" class="admin-section">
+                <div class="section-header">
+                    <h2>Kategori Yönetimi</h2>
+                    <button class="btn btn-primary" onclick="openCategoryModal()">+ Kategori Ekle</button>
+                </div>
+                <div class="categories-grid" id="categoriesGrid">
+                    <div class="loading">Kategoriler yükleniyor...</div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="admin-section">
+                <div class="section-header">
+                    <h2>Site Ayarları</h2>
+                </div>
+                
+                <div class="settings-container">
+                    <div class="settings-card">
+                        <h3>Logo ve Favicon</h3>
+                        <div class="form-group">
+                            <label>Site Logosu</label>
+                            <div class="image-upload-container">
+                                <div id="logoPreview" class="image-preview">
+                                    <span>Logo yükleyin</span>
+                                </div>
+                                <input type="file" id="logoInput" accept="image/*" style="display: none;">
+                                <button class="btn btn-secondary" onclick="document.getElementById('logoInput').click()">
+                                    Logo Yükle
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Favicon</label>
+                            <div class="image-upload-container">
+                                <div id="faviconPreview" class="image-preview favicon-preview">
+                                    <span>Favicon yükleyin</span>
+                                </div>
+                                <input type="file" id="faviconInput" accept="image/*" style="display: none;">
+                                <button class="btn btn-secondary" onclick="document.getElementById('faviconInput').click()">
+                                    Favicon Yükle
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <h3>Otel Bilgileri</h3>
+                        <div class="form-group">
+                            <label>Otel Adı</label>
+                            <input type="text" id="hotelNameInput" class="form-input" placeholder="The Nava Hotel">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Google Değerlendirme URL'si</label>
+                            <input type="url" id="googleReviewUrlInput" class="form-input" placeholder="https://g.page/r/...">
+                            <small style="color: #999; display: block; margin-top: 5px;">
+                                Google Maps'teki işletmenizin değerlendirme bağlantısını buraya yapıştırın
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>WhatsApp Numarası</label>
+                            <input type="text" id="whatsappNumberInput" class="form-input" placeholder="905XXXXXXXXX (başında + olmadan)">
+                            <small style="color: #999; display: block; margin-top: 5px;">
+                                Menü sayfalarında WhatsApp butonu gösterir. Boş bırakırsanız buton gizlenir.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Footer Telif Hakkı Metni</label>
+                            <input type="text" id="copyrightTextInput" class="form-input" placeholder=" 2024 The Nava Hotel. Tüm hakları saklıdır.">
+                            <small style="color: #999; display: block; margin-top: 5px;">
+                                Tüm sayfalardaki alt bilgi metnini değiştirir
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>🔐 Şifre Değiştir</h3>
+                        <div class="form-group">
+                            <label>Mevcut Şifre</label>
+                            <input type="password" id="currentPasswordInput" class="form-input" placeholder="Mevcut şifrenizi girin">
+                        </div>
+                        <div class="form-group">
+                            <label>Yeni Şifre</label>
+                            <input type="password" id="newPasswordInput" class="form-input" placeholder="Yeni şifrenizi girin">
+                        </div>
+                        <div class="form-group">
+                            <label>Yeni Şifre (Tekrar)</label>
+                            <input type="password" id="confirmPasswordInput" class="form-input" placeholder="Yeni şifreyi tekrar girin">
+                        </div>
+                        <div class="settings-actions" style="margin-top: 0;">
+                            <button class="btn btn-warning" onclick="changePassword()">
+                                🔑 Şifreyi Güncelle
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-actions">
+                        <button class="btn btn-primary" onclick="saveSettings()">
+                            💾 Ayarları Kaydet
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="productModalTitle">Ürün Ekle</h2>
+                <span class="modal-close" onclick="closeProductModal()">&times;</span>
+            </div>
+            <form id="productForm" class="modal-form">
+                <input type="hidden" id="productId">
+                <input type="hidden" id="productMenuType">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName">Ürün Adı *</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Fiyat (₺) *</label>
+                        <input type="number" id="productPrice" step="0.01" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="productDescription">Açıklama</label>
+                    <textarea id="productDescription" rows="3"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productCategory">Kategori *</label>
+                        <select id="productCategory" required>
+                            <option value="">Kategori Seçin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productTag">Etiket</label>
+                        <select id="productTag">
+                            <option value="">Yok</option>
+                            <option value="popular">Popüler</option>
+                            <option value="new">Yeni</option>
+                            <option value="chef recommendation">Şef Önerisi</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="productImage">Ürün Görseli</label>
+                    <div class="image-input-tabs">
+                        <button type="button" class="tab-btn active" data-tab="file">📁 Dosya Yükle</button>
+                        <button type="button" class="tab-btn" data-tab="url">🔗 URL ile Ekle</button>
+                    </div>
+                    <div class="tab-content active" id="fileTab">
+                        <input type="file" id="productImageFile" accept="image/*">
+                    </div>
+                    <div class="tab-content" id="urlTab">
+                        <input type="url" id="productImageUrl" class="form-input" placeholder="https://example.com/image.jpg">
+                        <button type="button" class="btn btn-secondary" onclick="loadImageFromUrl()" style="margin-top: 10px;">Görseli Yükle</button>
+                    </div>
+                    <input type="hidden" id="productImage">
+                    <div id="imagePreview" class="image-preview"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productOrder">Sıralama</label>
+                        <input type="number" id="productOrder" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="productActive" checked>
+                            Aktif (müşterilere görünür)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()">İptal</button>
+                    <button type="submit" class="btn btn-primary">Ürünü Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="categoryModalTitle">Kategori Ekle</h2>
+                <span class="modal-close" onclick="closeCategoryModal()">&times;</span>
+            </div>
+            <form id="categoryForm" class="modal-form">
+                <input type="hidden" id="categoryId">
+                
+                <div class="form-group">
+                    <label for="categoryName">Kategori Adı *</label>
+                    <input type="text" id="categoryName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryMenuType">Menü Tipi *</label>
+                    <select id="categoryMenuType" required>
+                        <option value="">Menü Tipi Seçin</option>
+                        <option value="cafe">Cafe</option>
+                        <option value="restaurant">Restaurant</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryOrder">Sıralama</label>
+                    <input type="number" id="categoryOrder" value="1">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kategoriyi Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div id="confirmDialog" class="confirm-dialog">
+        <div class="confirm-content">
+            <div class="confirm-icon" id="confirmIcon">⚠️</div>
+            <h3 class="confirm-title" id="confirmTitle">Emin misiniz?</h3>
+            <p class="confirm-message" id="confirmMessage">Bu işlemi gerçekleştirmek istediğinizden emin misiniz?</p>
+            <div class="confirm-actions">
+                <button class="btn btn-secondary" id="confirmCancel">İptal</button>
+                <button class="btn btn-danger" id="confirmOk">Onayla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Loading Spinner -->
+    <div class="spinner-overlay" id="spinnerOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="/js/admin.js"></script>
+</body>
+</html>

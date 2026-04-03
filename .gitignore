@@ -7,6 +7,13 @@ package-lock.json
 .env.local
 .env.production
 
+# Deploy archives & temp files
+*.zip
+temp_*.txt
+_fix_proxy.js
+_patch_server.js
+_full_review.js
+
 # Logs
 logs/
 *.log
@@ -80,7 +87,7 @@ dist/
 
 # Gatsby files
 .cache/
-public/
+# public/ (Gatsby için yazılmış, bu proje için gerekli DEĞİL)
 
 # vuepress build output
 .vuepress/dist/

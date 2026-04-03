@@ -442,11 +442,12 @@
       "price": 135,
       "categoryId": "9",
       "menuType": "restaurant",
-      "image": "",
-      "tag": "Şef Önerisi",
+      "image": "https://productimages.hepsiburada.net/s/34/375-375/10430075338802.jpg",
+      "tag": "",
       "isActive": true,
       "order": 1,
-      "createdAt": "2024-01-01T00:00:00.000Z"
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2026-04-02T16:38:47.294Z"
     },
     {
       "id": "214",
