@@ -8,14 +8,35 @@
     <title>The Nava Hotel - Dijital Menü</title>
     <link rel="icon" type="image/x-icon" id="favicon" href="">
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/lang.js"></script>
 </head>
 <body>
-    <div class="container">
+
+    <!-- Language Selection Overlay -->
+    <div id="langOverlay" class="lang-overlay" style="display:none;">
+        <div class="lang-overlay-card">
+            <div class="lang-overlay-logo">🍽️</div>
+            <h2 id="langOverlayTitle">Dil Seçin / Select Language</h2>
+            <div class="lang-buttons">
+                <button class="lang-pick-btn" onclick="selectLang('tr')">
+                    <span class="lang-flag">🇹🇷</span>
+                    <span>Türkçe</span>
+                </button>
+                <button class="lang-pick-btn" onclick="selectLang('en')">
+                    <span class="lang-flag">🇬🇧</span>
+                    <span>English</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="mainContent" style="display:none;">
         <header class="header">
             <div class="logo" id="headerLogo">
                 <h1>THE NAVA HOTEL</h1>
-                <p class="tagline">Premium Yemek Deneyimi</p>
+                <p class="tagline" id="taglineText">Premium Yemek Deneyimi</p>
             </div>
+            <button id="langToggleBtn" class="lang-toggle-btn" onclick="Lang.toggle()" title="Change Language">🇬🇧 EN</button>
         </header>
 
         <main class="main-content">
@@ -53,54 +74,96 @@
     </div>
 
     <script>
-        // Load settings
+        // Language selection handler
+        function selectLang(lang) {
+            Lang.set(lang);
+            document.getElementById('langOverlay').style.display = 'none';
+            showMain();
+        }
+
+        function showMain() {
+            document.getElementById('mainContent').style.display = 'flex';
+            applyIndexLang();
+            loadSettings();
+        }
+
+        function applyIndexLang() {
+            const isEN = Lang.isEN();
+            document.documentElement.lang = isEN ? 'en' : 'tr';
+
+            document.querySelector('.welcome-section h2').textContent =
+                isEN ? 'Welcome to Our Digital Menu' : 'Dijital Menümüze Hoş Geldiniz';
+            document.querySelector('.welcome-section p').textContent =
+                isEN ? 'Choose your dining experience' : 'Yemek deneyiminizi seçin';
+
+            const cafeCard = document.querySelector('.cafe-card');
+            if (cafeCard) {
+                cafeCard.querySelector('h3').textContent = isEN ? 'Cafe Menu' : 'Cafe Menüsü';
+                cafeCard.querySelector('p').textContent = isEN ? 'Coffee, Beverages & Snacks' : 'Kahve, İçecekler & Atıştırmalıklar';
+            }
+            const restCard = document.querySelector('.restaurant-card');
+            if (restCard) {
+                restCard.querySelector('h3').textContent = isEN ? 'Restaurant Menu' : 'Restaurant Menüsü';
+                restCard.querySelector('p').textContent = isEN ? 'Full Dining Experience' : 'Tam Yemek Deneyimi';
+            }
+
+            const tagline = document.getElementById('taglineText');
+            if (tagline) tagline.textContent = isEN ? 'Premium Dining Experience' : 'Premium Yemek Deneyimi';
+
+            const titleSuffix = isEN ? ' - Digital Menu' : ' - Dijital Menü';
+            document.title = 'The Nava Hotel' + titleSuffix;
+
+            Lang.applyUI();
+        }
+
         async function loadSettings() {
             try {
                 const response = await fetch('/api/settings');
                 const settings = await response.json();
-                
-                // Update favicon
+                const isEN = Lang.isEN();
+
                 if (settings.favicon) {
                     document.getElementById('favicon').href = settings.favicon;
                 }
-                
-                // Update logo
                 if (settings.logo) {
                     const logoDiv = document.getElementById('headerLogo');
-                    logoDiv.innerHTML = `<img src="${settings.logo}" alt="${settings.hotelName}" style="max-width: 200px; max-height: 80px;">`;
+                    logoDiv.innerHTML = `<img src="${settings.logo}" alt="${settings.hotelName}" style="max-width:200px;max-height:80px;object-fit:contain;"><p class="tagline" id="taglineText">${isEN ? 'Premium Dining Experience' : 'Premium Yemek Deneyimi'}</p>`;
                 }
-                
-                // Update hotel name
                 if (settings.hotelName) {
-                    document.getElementById('hotelName').textContent = settings.hotelName;
-                    document.title = settings.hotelName + ' - Dijital Menü';
+                    const hn = document.getElementById('hotelName');
+                    if (hn) hn.textContent = settings.hotelName;
+                    document.title = settings.hotelName + (isEN ? ' - Digital Menu' : ' - Dijital Menü');
                 }
-
-                // Update copyright text
                 if (settings.copyrightText) {
                     document.getElementById('copyrightText').textContent = settings.copyrightText;
                 }
-                
-                // Update Google review link
                 if (settings.googleReviewUrl) {
                     const reviewLink = document.getElementById('googleReviewLink');
                     reviewLink.href = settings.googleReviewUrl;
                     reviewLink.style.display = 'inline-block';
+                    reviewLink.textContent = Lang.t('googleReview');
                 }
-
-                // Update WhatsApp link
                 if (settings.whatsappNumber) {
                     const waLink = document.getElementById('whatsappLink');
                     waLink.href = 'https://wa.me/' + settings.whatsappNumber;
                     waLink.style.display = 'inline-block';
+                    waLink.textContent = Lang.t('whatsapp');
                 }
             } catch (error) {
                 console.error('Ayarlar yüklenemedi:', error);
             }
         }
-        
-        // Load settings on page load
-        document.addEventListener('DOMContentLoaded', loadSettings);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('menuLang');
+            if (savedLang) {
+                // Language already selected, show main directly
+                showMain();
+            } else {
+                // Show language selection overlay
+                document.getElementById('langOverlay').style.display = 'flex';
+            }
+        });
     </script>
 </body>
 </html>

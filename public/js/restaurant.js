@@ -32,19 +32,29 @@ function setupEventListeners() {
 }
 
 async function loadMenuData() {
+    const menuContent = document.getElementById('menuContent');
+    menuContent.innerHTML = `<div class="loading">${window.Lang ? Lang.t('loading') : 'Menü yükleniyor...'}</div>`;
     try {
         const response = await fetch('/api/menu/restaurant');
         const data = await response.json();
-        allCategories = data.categories;
-        allProducts = data.products;
+
+        if (window.Lang) {
+            allCategories = await Lang.translateCategories(data.categories);
+            allProducts = await Lang.translateProducts(data.products);
+            Lang.applyUI();
+        } else {
+            allCategories = data.categories;
+            allProducts = data.products;
+        }
+
         renderCategories();
         renderProducts(allProducts);
     } catch (error) {
         console.error('Error loading menu:', error);
-        document.getElementById('menuContent').innerHTML = `
+        menuContent.innerHTML = `
             <div class="no-results">
-                <h3>Menu could not be loaded</h3>
-                <p>Please try again later</p>
+                <h3>${window.Lang ? Lang.t('noResults') : 'Menü yüklenemedi'}</h3>
+                <p>Lütfen daha sonra tekrar deneyin</p>
             </div>
         `;
     }
@@ -52,7 +62,8 @@ async function loadMenuData() {
 
 function renderCategories() {
     const categoriesFilter = document.getElementById('categoriesFilter');
-    categoriesFilter.innerHTML = '<button class="category-btn active" data-category="all">Tum\u00FC</button>';
+    const allLabel = window.Lang ? Lang.t('allCategories') : 'Tümü';
+    categoriesFilter.innerHTML = `<button class="category-btn active" data-category="all">${allLabel}</button>`;
     allCategories.forEach(category => {
         const button = document.createElement('button');
         button.className = 'category-btn';
@@ -92,12 +103,9 @@ function filterProducts(searchTerm) {
 function renderProducts(products) {
     const menuContent = document.getElementById('menuContent');
     if (products.length === 0) {
-        menuContent.innerHTML = `
-            <div class="no-results">
-                <h3>\u00DCr\u00FCn bulunamad\u0131</h3>
-                <p>Arama veya filtrenizi ayarlamay\u0131 deneyin</p>
-            </div>
-        `;
+        const noRes = window.Lang ? Lang.t('noResults') : 'Ürün bulunamadı';
+        const hint = window.Lang ? Lang.t('noResultsHint') : 'Arama veya filtrenizi ayarlamayı deneyin';
+        menuContent.innerHTML = `<div class="no-results"><h3>${noRes}</h3><p>${hint}</p></div>`;
         return;
     }
     const CARD_IMG_STYLE = 'position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;background:#f9f9f6;display:block;';
@@ -109,7 +117,7 @@ function renderProducts(products) {
                 ${product.tag ? `<span class="product-tag">${product.tag}</span>` : ''}
                 <div class="product-info">
                     <h3 class="product-name">${product.name}</h3>
-                    <p class="product-description">${product.description || 'Men\u00FCm\u00FCzden lezzetli bir \u00FCr\u00FCn'}</p>
+                    <p class="product-description">${product.description || (window.Lang ? Lang.t('defaultDesc') : 'Menümüzden lezzetli bir ürün')}</p>
                     <div class="product-price">\u20BA${product.price.toFixed(2)}</div>
                 </div>
             </div>
@@ -132,7 +140,7 @@ function openProductModal(productId) {
             ${product.tag ? `<span class="product-tag" style="position:relative;top:auto;left:auto;display:inline-block;margin-bottom:12px;">${product.tag}</span>` : ''}
             <h2 class="modal-title">${product.name}</h2>
             ${categoryName ? `<p style="color:#999;margin-bottom:12px;font-size:0.9rem;">${categoryName}</p>` : ''}
-            <p class="modal-description">${product.description || 'Restaurant men\u00FCm\u00FCzden lezzetli bir \u00FCr\u00FCn.'}</p>
+            <p class="modal-description">${product.description || (window.Lang ? Lang.t('defaultDesc') : 'Restaurant menümüzden lezzetli bir ürün.')}</p>
             <div class="modal-price">\u20BA${product.price.toFixed(2)}</div>
         </div>
     `;

@@ -7,6 +7,7 @@
     <title>Cafe Menüsü - The Nava Hotel</title>
     <link rel="icon" type="image/x-icon" id="favicon" href="">
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/lang.js"></script>
 </head>
 <body>
     <div class="container menu-page">
@@ -19,6 +20,7 @@
             <a href="#" id="headerReviewLink" class="header-review-btn" target="_blank" rel="noopener" style="display: none;">
                 ⭐ <span class="review-text">Değerlendir</span>
             </a>
+            <button id="langToggleBtn" class="lang-toggle-btn" title="Change Language">🇬🇧 EN</button>
         </header>
 
         <div class="search-section">
@@ -56,6 +58,9 @@
     </div>
 
     <script src="/js/cafe.js"></script>
+    <script>
+        document.getElementById('langToggleBtn').addEventListener('click', () => Lang.toggle());
+    </script>
     <script>
         // Load settings
         async function loadSettings() {
