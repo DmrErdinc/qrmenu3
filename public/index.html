@@ -4,116 +4,141 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="The Nava Hotel - Dijital Menü - Cafe & Restaurant">
-    <meta name="keywords" content="otel, restoran, cafe, menü, dijital menü, QR menü">
     <title>The Nava Hotel - Dijital Menü</title>
     <link rel="icon" type="image/x-icon" id="favicon" href="">
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/lang.js"></script>
 </head>
-<body>
+<body class="index-body">
 
-    <!-- Language Selection Overlay -->
-    <div id="langOverlay" class="lang-overlay" style="display:none;">
-        <div class="lang-overlay-card">
-            <div class="lang-overlay-logo">🍽️</div>
-            <h2 id="langOverlayTitle">Dil Seçin / Select Language</h2>
-            <div class="lang-buttons">
-                <button class="lang-pick-btn" onclick="selectLang('tr')">
-                    <span class="lang-flag">🇹🇷</span>
-                    <span>Türkçe</span>
-                </button>
-                <button class="lang-pick-btn" onclick="selectLang('en')">
-                    <span class="lang-flag">🇬🇧</span>
-                    <span>English</span>
-                </button>
-            </div>
-        </div>
-    </div>
+    <div class="index-page">
 
-    <div class="container" id="mainContent" style="display:none;">
-        <header class="header">
-            <div class="logo" id="headerLogo">
-                <h1>THE NAVA HOTEL</h1>
-                <p class="tagline" id="taglineText">Premium Yemek Deneyimi</p>
+        <!-- Header -->
+        <header class="index-header">
+            <div class="index-logo" id="headerLogo">
+                <div class="index-logo-text">THE NAVA HOTEL</div>
+                <div class="index-logo-sub" id="taglineText">Premium Yemek Deneyimi</div>
             </div>
-            <button id="langToggleBtn" class="lang-toggle-btn" onclick="Lang.toggle()" title="Change Language">🇬🇧 EN</button>
         </header>
 
-        <main class="main-content">
-            <div class="welcome-section">
-                <h2>Dijital Menümüze Hoş Geldiniz</h2>
-                <p>Yemek deneyiminizi seçin</p>
+        <!-- Main Content -->
+        <main class="index-main">
+
+            <!-- Welcome -->
+            <div class="index-welcome">
+                <h1 id="welcomeTitle">Dijital Menümüze Hoş Geldiniz</h1>
+                <p id="welcomeSubtitle">Yemek deneyiminizi seçin</p>
             </div>
 
-            <div class="menu-selection">
-                <a href="/cafe.html" class="menu-card cafe-card">
-                    <div class="card-icon">☕</div>
-                    <h3>Cafe Menüsü</h3>
-                    <p>Kahve, İçecekler & Atıştırmalıklar</p>
-                    <span class="card-arrow">→</span>
+            <!-- Language Pill Toggle -->
+            <div class="lang-pill-wrapper">
+                <div class="lang-pill-toggle">
+                    <button class="lang-pill-btn active" id="btnTR" onclick="switchIndexLang('tr')">
+                        🇹🇷 Türkçe
+                    </button>
+                    <button class="lang-pill-btn" id="btnEN" onclick="switchIndexLang('en')">
+                        🇬🇧 English
+                    </button>
+                </div>
+            </div>
+
+            <!-- Menu Cards -->
+            <div class="index-cards">
+                <a href="/cafe.html" class="index-card">
+                    <div class="index-card-icon">☕</div>
+                    <div class="index-card-content">
+                        <h2 class="index-card-title" id="cafeTitle">Cafe Menüsü</h2>
+                        <p class="index-card-desc" id="cafeDesc">Kahve, İçecekler &amp; Atıştırmalıklar</p>
+                    </div>
+                    <div class="index-card-arrow">→</div>
                 </a>
 
-                <a href="/restaurant.html" class="menu-card restaurant-card">
-                    <div class="card-icon">🍽️</div>
-                    <h3>Restaurant Menüsü</h3>
-                    <p>Tam Yemek Deneyimi</p>
-                    <span class="card-arrow">→</span>
+                <a href="/restaurant.html" class="index-card">
+                    <div class="index-card-icon">🍽️</div>
+                    <div class="index-card-content">
+                        <h2 class="index-card-title" id="restTitle">Restaurant Menüsü</h2>
+                        <p class="index-card-desc" id="restDesc">Tam Yemek Deneyimi</p>
+                    </div>
+                    <div class="index-card-arrow">→</div>
                 </a>
             </div>
+
         </main>
 
-        <footer class="footer">
+        <!-- Footer -->
+        <footer class="index-footer">
             <p id="copyrightText">&copy; 2024 <span id="hotelName">The Nava Hotel</span>. Tüm hakları saklıdır.</p>
-            <a href="#" id="googleReviewLink" class="review-link" target="_blank" rel="noopener" style="display: none;">
-                ⭐ Bizi Google'da Değerlendirin
-            </a>
-            <a href="#" id="whatsappLink" class="review-link" target="_blank" rel="noopener" style="display: none; background: #25D366;">
-                💬 WhatsApp
-            </a>
+            <div class="index-footer-links">
+                <a href="#" id="googleReviewLink" class="review-link" target="_blank" rel="noopener" style="display:none;">
+                    ⭐ Bizi Google'da Değerlendirin
+                </a>
+                <a href="#" id="whatsappLink" class="review-link" target="_blank" rel="noopener" style="display:none; background:#25D366;">
+                    💬 WhatsApp
+                </a>
+            </div>
         </footer>
+
     </div>
 
     <script>
-        // Language selection handler
-        function selectLang(lang) {
-            Lang.set(lang);
-            document.getElementById('langOverlay').style.display = 'none';
-            showMain();
-        }
+        const INDEX_TEXT = {
+            tr: {
+                welcome: 'Dijital Menümüze Hoş Geldiniz',
+                subtitle: 'Yemek deneyiminizi seçin',
+                tagline: 'Premium Yemek Deneyimi',
+                cafeTitle: 'Cafe Menüsü',
+                cafeDesc: 'Kahve, İçecekler & Atıştırmalıklar',
+                restTitle: 'Restaurant Menüsü',
+                restDesc: 'Tam Yemek Deneyimi',
+                googleReview: '⭐ Bizi Google\'da Değerlendirin',
+                whatsapp: '💬 WhatsApp',
+                titleSuffix: ' - Dijital Menü'
+            },
+            en: {
+                welcome: 'Welcome to Our Digital Menu',
+                subtitle: 'Choose your dining experience',
+                tagline: 'Premium Dining Experience',
+                cafeTitle: 'Cafe Menu',
+                cafeDesc: 'Coffee, Beverages & Snacks',
+                restTitle: 'Restaurant Menu',
+                restDesc: 'Full Dining Experience',
+                googleReview: '⭐ Review Us on Google',
+                whatsapp: '💬 WhatsApp',
+                titleSuffix: ' - Digital Menu'
+            }
+        };
 
-        function showMain() {
-            document.getElementById('mainContent').style.display = 'flex';
+        function switchIndexLang(lang) {
+            Lang.set(lang);
             applyIndexLang();
-            loadSettings();
         }
 
         function applyIndexLang() {
-            const isEN = Lang.isEN();
+            const lang = Lang.get();
+            const T = INDEX_TEXT[lang] || INDEX_TEXT.tr;
+            const isEN = lang === 'en';
+
             document.documentElement.lang = isEN ? 'en' : 'tr';
-
-            document.querySelector('.welcome-section h2').textContent =
-                isEN ? 'Welcome to Our Digital Menu' : 'Dijital Menümüze Hoş Geldiniz';
-            document.querySelector('.welcome-section p').textContent =
-                isEN ? 'Choose your dining experience' : 'Yemek deneyiminizi seçin';
-
-            const cafeCard = document.querySelector('.cafe-card');
-            if (cafeCard) {
-                cafeCard.querySelector('h3').textContent = isEN ? 'Cafe Menu' : 'Cafe Menüsü';
-                cafeCard.querySelector('p').textContent = isEN ? 'Coffee, Beverages & Snacks' : 'Kahve, İçecekler & Atıştırmalıklar';
-            }
-            const restCard = document.querySelector('.restaurant-card');
-            if (restCard) {
-                restCard.querySelector('h3').textContent = isEN ? 'Restaurant Menu' : 'Restaurant Menüsü';
-                restCard.querySelector('p').textContent = isEN ? 'Full Dining Experience' : 'Tam Yemek Deneyimi';
-            }
+            document.getElementById('welcomeTitle').textContent = T.welcome;
+            document.getElementById('welcomeSubtitle').textContent = T.subtitle;
 
             const tagline = document.getElementById('taglineText');
-            if (tagline) tagline.textContent = isEN ? 'Premium Dining Experience' : 'Premium Yemek Deneyimi';
+            if (tagline) tagline.textContent = T.tagline;
 
-            const titleSuffix = isEN ? ' - Digital Menu' : ' - Dijital Menü';
-            document.title = 'The Nava Hotel' + titleSuffix;
+            document.getElementById('cafeTitle').textContent = T.cafeTitle;
+            document.getElementById('cafeDesc').textContent = T.cafeDesc;
+            document.getElementById('restTitle').textContent = T.restTitle;
+            document.getElementById('restDesc').textContent = T.restDesc;
 
-            Lang.applyUI();
+            document.getElementById('btnTR').classList.toggle('active', !isEN);
+            document.getElementById('btnEN').classList.toggle('active', isEN);
+
+            const gr = document.getElementById('googleReviewLink');
+            if (gr && gr.style.display !== 'none') gr.textContent = T.googleReview;
+            const wa = document.getElementById('whatsappLink');
+            if (wa && wa.style.display !== 'none') wa.textContent = T.whatsapp;
+
+            document.title = 'The Nava Hotel' + T.titleSuffix;
         }
 
         async function loadSettings() {
@@ -126,43 +151,42 @@
                     document.getElementById('favicon').href = settings.favicon;
                 }
                 if (settings.logo) {
-                    const logoDiv = document.getElementById('headerLogo');
-                    logoDiv.innerHTML = `<img src="${settings.logo}" alt="${settings.hotelName}" style="max-width:200px;max-height:80px;object-fit:contain;"><p class="tagline" id="taglineText">${isEN ? 'Premium Dining Experience' : 'Premium Yemek Deneyimi'}</p>`;
+                    const T = INDEX_TEXT[Lang.get()] || INDEX_TEXT.tr;
+                    document.getElementById('headerLogo').innerHTML =
+                        `<img src="${settings.logo}" alt="${settings.hotelName}" style="max-height:70px;object-fit:contain;">` +
+                        `<div class="index-logo-sub" id="taglineText">${T.tagline}</div>`;
                 }
                 if (settings.hotelName) {
                     const hn = document.getElementById('hotelName');
                     if (hn) hn.textContent = settings.hotelName;
-                    document.title = settings.hotelName + (isEN ? ' - Digital Menu' : ' - Dijital Menü');
+                    const T = INDEX_TEXT[Lang.get()] || INDEX_TEXT.tr;
+                    document.title = settings.hotelName + T.titleSuffix;
                 }
                 if (settings.copyrightText) {
                     document.getElementById('copyrightText').textContent = settings.copyrightText;
                 }
                 if (settings.googleReviewUrl) {
-                    const reviewLink = document.getElementById('googleReviewLink');
-                    reviewLink.href = settings.googleReviewUrl;
-                    reviewLink.style.display = 'inline-block';
-                    reviewLink.textContent = Lang.t('googleReview');
+                    const T = INDEX_TEXT[Lang.get()] || INDEX_TEXT.tr;
+                    const el = document.getElementById('googleReviewLink');
+                    el.href = settings.googleReviewUrl;
+                    el.style.display = 'inline-block';
+                    el.textContent = T.googleReview;
                 }
                 if (settings.whatsappNumber) {
-                    const waLink = document.getElementById('whatsappLink');
-                    waLink.href = 'https://wa.me/' + settings.whatsappNumber;
-                    waLink.style.display = 'inline-block';
-                    waLink.textContent = Lang.t('whatsapp');
+                    const T = INDEX_TEXT[Lang.get()] || INDEX_TEXT.tr;
+                    const el = document.getElementById('whatsappLink');
+                    el.href = 'https://wa.me/' + settings.whatsappNumber;
+                    el.style.display = 'inline-block';
+                    el.textContent = T.whatsapp;
                 }
-            } catch (error) {
-                console.error('Ayarlar yüklenemedi:', error);
+            } catch (e) {
+                console.error('Ayarlar yüklenemedi:', e);
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('menuLang');
-            if (savedLang) {
-                // Language already selected, show main directly
-                showMain();
-            } else {
-                // Show language selection overlay
-                document.getElementById('langOverlay').style.display = 'flex';
-            }
+            applyIndexLang();
+            loadSettings();
         });
     </script>
 </body>
